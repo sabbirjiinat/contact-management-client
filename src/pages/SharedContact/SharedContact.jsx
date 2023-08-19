@@ -34,7 +34,7 @@ const SharedContact = () => {
                 <th className="text-base font-medium text-gray-600">
                   Contact Number
                 </th>
-                <th className="text-base font-medium text-gray-600">Update</th>
+                <th className="text-base font-medium text-gray-600">Permission</th>
              
               </tr>
             </thead>

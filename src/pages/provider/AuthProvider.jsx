@@ -9,7 +9,7 @@ import {
   onAuthStateChanged,
   updateProfile,
 } from "firebase/auth";
-
+import axios from "axios";
 import app from "../../firebase/firebase.config";
 const auth = getAuth(app);
 export const AuthContext = createContext(null);
@@ -48,12 +48,24 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      setLoading(false)
+
+      if (currentUser && currentUser?.email) {
+        axios
+          .post("https://contact-management-server-seven.vercel.app/jwt", { email: currentUser.email })
+          .then((data) => {
+            localStorage.setItem("access-token", data.data.token);
+            setLoading(false);
+          });
+      } else {
+        localStorage.removeItem("access-token");
+        setLoading(false);
+      }
     });
     return () => {
       unsubscribe();
     };
   }, []);
+
 
   const authInfo = {
     user,

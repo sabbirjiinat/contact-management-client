@@ -4,7 +4,7 @@ const SaveUserToDb = (user) => {
       photo: user?.photoURL,
       name: user?.displayName,
     };
-    fetch(`http://localhost:8000/users/${user.email}`, {
+    fetch(`https://contact-management-server-seven.vercel.app/users/${user.email}`, {
       method: "PUT",
       headers: {
         "content-type": "application/json",

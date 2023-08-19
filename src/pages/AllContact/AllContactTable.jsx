@@ -8,6 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ShareContactModal from "./ShareContactModal";
 import UseAuth from "../../hooks/UseAuth";
+import UseAxiosSecure from "../../hooks/UseAxiosSecure";
 
 const AllContactTable = ({ contactUser }) => {
   const { name, email, number, image_url } = contactUser;
@@ -18,6 +19,7 @@ const AllContactTable = ({ contactUser }) => {
   const openModal = () => setIsOpen(true);
   const [loader, setLoader] = useState(false);
   const {user} = UseAuth()
+  const [axiosSecure] = UseAxiosSecure()
 
   const [open, setOpen] = useState(false);
   const openSharedModal = () => setOpen(true);
@@ -35,12 +37,9 @@ const AllContactTable = ({ contactUser }) => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:8000/contactUsers/${user._id}`, {
-          method: "DELETE",
-        })
-          .then((res) => res.json())
+       axiosSecure.delete(`/contactUsers/${user._id}`)
           .then((data) => {
-            if (data.deletedCount > 0) {
+            if (data.data.deletedCount > 0) {
               refetch();
               Swal.fire({
                 position: "center-center",
@@ -83,16 +82,9 @@ const AllContactTable = ({ contactUser }) => {
         const image_url = imageUrl.data.display_url;
         const { name, email, number } = data;
         const updateUser = { name, email, number, image_url };
-        fetch(`http://localhost:8000/contactUsers/${contactUser._id}`, {
-          method: "PATCH",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify(updateUser),
-        })
-          .then((res) => res.json())
+        axiosSecure.patch(`/contactUsers/${contactUser._id}`,updateUser)
           .then((updatedUser) => {
-            if (updatedUser.modifiedCount > 0) {
+            if (updatedUser.data.modifiedCount > 0) {
               refetch();
               setLoader(false);
               setIsOpen(false);
@@ -162,9 +154,7 @@ const AllContactTable = ({ contactUser }) => {
         theme: "light",
       });
     }
-    console.log(email);
-    console.log(permission);
-    console.log(contactUser);
+
     const sharedContact = {
       name: contactUser.name,
       email: contactUser.email,
@@ -176,16 +166,11 @@ const AllContactTable = ({ contactUser }) => {
       sendTo: email,
     };
     setSharedLoader(true);
-    fetch(`http://localhost:8000/sharedContact`, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(sharedContact),
-    })
-      .then((res) => res.json())
+    axiosSecure.post(`/sharedContact`, sharedContact
+    )
+ 
       .then((data) => {
-        if (data.insertedId) {
+        if (data.data.insertedId) {
           setSharedLoader(false);
           setOpen(false);
           Swal.fire({

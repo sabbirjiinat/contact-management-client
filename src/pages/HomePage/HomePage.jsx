@@ -5,7 +5,7 @@ import AllUserTable from "./AllUserTable";
 
 const HomePage = () => {
   const [users] = UseAllUsers();
-  console.log(users);
+
   return (
         <div className="bg-gray-200">
     <Container>

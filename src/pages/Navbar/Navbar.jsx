@@ -1,9 +1,11 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import UseAuth from "../../hooks/UseAuth";
+import UseSharedContact from "../../hooks/UseSharedContact";
 
 const Navbar = () => {
+  const [sharedContact] = UseSharedContact();
   const { user, logOut } = UseAuth();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const navItem = (
     <div className="space-x-5 flex items-center">
       <NavLink
@@ -16,36 +18,43 @@ const Navbar = () => {
       >
         Home
       </NavLink>
-    {user &&   <NavLink
-        className={({ isActive }) =>
-          `${
-            isActive ? "text-blue-600" : "text-neutral"
-          } font-[500] text-[17px]`
-        }
-        to="/addContact"
-      >
-        Add Contact
-      </NavLink>}
-    {user &&   <NavLink
-        className={({ isActive }) =>
-          `${
-            isActive ? "text-blue-600" : "text-neutral"
-          } font-[500] text-[17px]`
-        }
-        to="/allContact"
-      >
-        All Contact
-      </NavLink>}
-    {user &&   <NavLink
-        className={({ isActive }) =>
-          `${
-            isActive ? "text-blue-600" : "text-neutral"
-          } font-[500] text-[17px]`
-        }
-        to="/sharedContact"
-      >
-        Shared Contact
-      </NavLink>}
+      {user && (
+        <NavLink
+          className={({ isActive }) =>
+            `${
+              isActive ? "text-blue-600" : "text-neutral"
+            } font-[500] text-[17px]`
+          }
+          to="/addContact"
+        >
+          Add Contact
+        </NavLink>
+      )}
+      {user && (
+        <NavLink
+          className={({ isActive }) =>
+            `${
+              isActive ? "text-blue-600" : "text-neutral"
+            } font-[500] text-[17px]`
+          }
+          to="/allContact"
+        >
+          All Contact
+        </NavLink>
+      )}
+      {user && (
+        <NavLink
+          className={({ isActive }) =>
+            `${
+              isActive ? "text-blue-600" : "text-neutral"
+            } font-[500] text-[17px] `
+          }
+          to="/sharedContact"
+        >
+          Shared Contact{" "}
+          <span className="badge badge-secondary">+{sharedContact.length}</span>
+        </NavLink>
+      )}
       {!user && (
         <NavLink
           className={({ isActive }) =>
@@ -70,18 +79,17 @@ const Navbar = () => {
           Sign Up
         </NavLink>
       )}
-     {user &&   <button onClick={()=>{
-        logOut()
-        navigate('/')
-       }} className="font-[500] text-[17px] bg-blue-600 px-2 py-1 rounded-sm text-gray-100 hover:bg-blue-700">
-       Logout
-       </button>}
-        
-         
-          
-       
-         
-        
+      {user && (
+        <button
+          onClick={() => {
+            logOut();
+            navigate("/");
+          }}
+          className="font-[500] text-[17px] bg-blue-600 px-2 py-1 rounded-sm text-gray-100 hover:bg-blue-700"
+        >
+          Logout
+        </button>
+      )}
     </div>
   );
   return (

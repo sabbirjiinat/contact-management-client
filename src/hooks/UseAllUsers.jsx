@@ -3,7 +3,7 @@ const UseAllUsers = () => {
   const { data: users = [] } = useQuery({
     queryKey: ["users"],
     queryFn: async () => {
-      const res = await fetch("http://localhost:8000/users");
+      const res = await fetch("https://contact-management-server-seven.vercel.app/users");
       return res.json();
     },
   });

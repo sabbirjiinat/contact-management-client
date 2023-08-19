@@ -7,10 +7,12 @@ import { useForm } from "react-hook-form";
 import { RxAvatar } from "react-icons/rx";
 import Swal from "sweetalert2";
 import UseAuth from "../../hooks/UseAuth";
+import UseAxiosSecure from "../../hooks/UseAxiosSecure";
 const AddContact = () => {
   const [avatar, ,] = useState("");
   const [loader, setLoader] = useState(false);
   const { user } = UseAuth();
+  const [axiosSecure] = UseAxiosSecure()
   const { register, handleSubmit,reset } = useForm();
   const onSubmit = (data) => {
     if (data.name.length === 0) {
@@ -79,16 +81,9 @@ const AddContact = () => {
           image_url,
           postUserEmail: user?.email,
         };
-        fetch(`http://localhost:8000/contactUsers`, {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify(newUser),
-        })
-          .then((res) => res.json())
+        axiosSecure.post(`/contactUsers`, newUser)
           .then((data) => {
-            if (data.insertedId) {
+            if (data.data.insertedId) {
               setLoader(false);
               reset()
               Swal.fire({
